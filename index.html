@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tamagotchi</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    #stats { margin-top: 20px; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
+    #pop { margin-top: 20px; }
+    img { width: 150px; height: 150px; }
+    #text { font-size: 24px; color: red; }
+  </style>
+</head>
+
+<body>
+  <audio autoplay loop>
+    <source src="MUSIC.mp3" type="audio/mp3">
+  </audio>
+
+  <h1>Verzorg je pop!</h1>
+  <img src="Tamagotchi .png" alt="">
+  <div id="stats" class="stats">
+    <h1 id="text"></h1>
+
+    <p>pleizer: <span id="pleizer">100</span></p>
+    <p>Honger: <span id="honger">100</span></p>
+    <p>Slaap: <span id="slaap">100</span></p>
+  </div>
+  <button onclick="voedPop()">Voed Pop</button>
+  <button onclick="laatSlapen()">Laat Slapen</button>
+  <button onclick="spelen()">Spelen</button>
+
+  <script>
+    let honger = 100;
+    let slaap = 100;
+    let pleizer = 100;
+  
+    // Functies om punten te verlagen
+    function verlaagPunten() {
+      if (honger > 0) honger -= 3;
+      if (slaap > 0) slaap -= 1;
+      if (pleizer > 0) pleizer -= 3;
+  
+      // Update de statistieken in de UI
+      document.getElementById("honger").textContent = honger;
+      document.getElementById("slaap").textContent = slaap;
+      document.getElementById("pleizer").textContent = pleizer;
+  
+      // Controleer of de pop "dood" is
+      if (honger === 0 || slaap === 0 || pleizer === 0) {
+        document.getElementById("text").textContent = "Je pop is overleden! Herlaad de pagina om opnieuw te beginnen.";
+        clearInterval(interval);
+      }
+    }
+  
+    // Functie om de pop te voeden
+    function voedPop() {
+      if (honger < 100) {
+        honger += 10;
+        document.getElementById("honger").textContent = honger;
+        if (honger >= 100) {
+          document.getElementById("text").textContent = "De pop is vol!";
+        } else {
+          document.getElementById("text").textContent = "Je hebt de pop gevoed!";
+        }
+      } else {
+        document.getElementById("text").textContent = "De pop is niet hongerig!";
+      }
+
+      // If hunger is less than or equal to 90, update the hunger message
+      if (honger <= 90 && honger > 0) {
+        document.getElementById("text").textContent = "De pop heeft honger!";
+      }
+    }
+  
+    // Functie om de pop te laten slapen
+    function laatSlapen() {
+      if (slaap < 100) {
+        slaap += 10;
+        document.getElementById("slaap").textContent = slaap;
+        document.getElementById("text").textContent = "De pop slaapt nu.";
+      } else {
+        document.getElementById("text").textContent = "De pop is niet moe!";
+      }
+    }
+  
+    // Functie om te spelen
+    function spelen() {
+      if (pleizer < 100) {
+        pleizer += 10;
+        document.getElementById("pleizer").textContent = pleizer;
+        document.getElementById("text").textContent = "De pop heeft plezier!";
+      } else {
+        document.getElementById("text").textContent = "De pop is al heel blij!";
+      }
+    }
+  
+    // Start een interval om elke 10 seconden punten te verlagen
+    const interval = setInterval(verlaagPunten, 10000);
+    
+  </script>
+  
+</body>
+</html>
