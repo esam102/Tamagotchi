@@ -1,17 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="main.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tamagotchi</title>
-  <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-    #stats { margin-top: 20px; }
-    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
-    #pop { margin-top: 20px; }
-    img { width: 150px; height: 150px; }
-    #text { font-size: 24px; color: red; }
-  </style>
 </head>
 
 <body>
@@ -23,10 +16,21 @@
   <img src="Tamagotchi .png" alt="">
   <div id="stats" class="stats">
     <h1 id="text"></h1>
+    
 
-    <p>pleizer: <span id="pleizer">100</span></p>
-    <p>Honger: <span id="honger">100</span></p>
-    <p>Slaap: <span id="slaap">100</span></p>
+    <div id="stats" class="stats">
+      <h1 id="text"></h1>
+      
+      <p>Honger: <span id="honger">100</span></p>
+      <progress id="hongerBar" max="100" value="100"></progress>
+    
+      <p>Slaap: <span id="slaap">100</span></p>
+      <progress id="slaapBar" max="100" value="100"></progress>
+    
+      <p>Plezier: <span id="pleizer">100</span></p>
+      <progress id="plezierBar" max="100" value="100"></progress>
+    </div>
+    
   </div>
   <button onclick="voedPop()">Voed Pop</button>
   <button onclick="laatSlapen()">Laat Slapen</button>
@@ -39,9 +43,9 @@
   
     // Functies om punten te verlagen
     function verlaagPunten() {
-      if (honger > 0) honger -= 3;
+      if (honger > 0) honger -= 1;
       if (slaap > 0) slaap -= 1;
-      if (pleizer > 0) pleizer -= 3;
+      if (pleizer > 0) pleizer -= 1;
   
       // Update de statistieken in de UI
       document.getElementById("honger").textContent = honger;
@@ -53,12 +57,15 @@
         document.getElementById("text").textContent = "Je pop is overleden! Herlaad de pagina om opnieuw te beginnen.";
         clearInterval(interval);
       }
+
+      
     }
   
     // Functie om de pop te voeden
     function voedPop() {
       if (honger < 100) {
         honger += 10;
+        pleizer += 5;
         document.getElementById("honger").textContent = honger;
         if (honger >= 100) {
           document.getElementById("text").textContent = "De pop is vol!";
@@ -67,11 +74,6 @@
         }
       } else {
         document.getElementById("text").textContent = "De pop is niet hongerig!";
-      }
-
-      // If hunger is less than or equal to 90, update the hunger message
-      if (honger <= 90 && honger > 0) {
-        document.getElementById("text").textContent = "De pop heeft honger!";
       }
     }
   
@@ -90,6 +92,8 @@
     function spelen() {
       if (pleizer < 100) {
         pleizer += 10;
+        honger -= 5;
+        slaap -= 5;
         document.getElementById("pleizer").textContent = pleizer;
         document.getElementById("text").textContent = "De pop heeft plezier!";
       } else {
@@ -98,7 +102,7 @@
     }
   
     // Start een interval om elke 10 seconden punten te verlagen
-    const interval = setInterval(verlaagPunten, 10000);
+    const interval = setInterval(verlaagPunten, 1000);
     
   </script>
   
