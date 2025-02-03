@@ -8,30 +8,22 @@
 </head>
 
 <body>
-  <audio autoplay loop>
-    <source src="MUSIC.mp3" type="audio/mp3">
-  </audio>
-
+  
   <h1>Verzorg je pop!</h1>
-  <img src="Tamagotchi .png" alt="">
+  <img id="tamagotchiImg" src="/Tamagotchi.png" alt="" width="200">
   <div id="stats" class="stats">
-    <h1 id="text"></h1>
-    
+    <h2 id="text">De pop is blij en gezond!</h2>
 
-    <div id="stats" class="stats">
-      <h1 id="text"></h1>
-      
-      <p>Honger: <span id="honger">100</span></p>
-      <progress id="hongerBar" max="100" value="100"></progress>
-    
-      <p>Slaap: <span id="slaap">100</span></p>
-      <progress id="slaapBar" max="100" value="100"></progress>
-    
-      <p>Plezier: <span id="pleizer">100</span></p>
-      <progress id="plezierBar" max="100" value="100"></progress>
-    </div>
-    
+    <p>Honger: <span id="honger">100</span></p>
+    <progress id="hongerBar" max="100" value="100"></progress>
+
+    <p>Slaap: <span id="slaap">100</span></p>
+    <progress id="slaapBar" max="100" value="100"></progress>
+
+    <p>Plezier: <span id="plezier">100</span></p>
+    <progress id="plezierBar" max="100" value="100"></progress>
   </div>
+
   <button onclick="voedPop()">Voed Pop</button>
   <button onclick="laatSlapen()">Laat Slapen</button>
   <button onclick="spelen()">Spelen</button>
@@ -39,72 +31,110 @@
   <script>
     let honger = 100;
     let slaap = 100;
-    let pleizer = 100;
+    let plezier = 100;
+
+    let emotion = ["ik heb honger", "ik ben moe", "ik ben verdrietig"];
+
+    
+    function updateBars() {
+      document.getElementById("hongerBar").value = honger;
+      document.getElementById("slaapBar").value = slaap;
+      document.getElementById("plezierBar").value = plezier;
+      document.getElementById("honger").textContent = honger;
+      document.getElementById("slaap").textContent = slaap;
+      document.getElementById("plezier").textContent = plezier;
+    }
+
+   
+    function weergavevanemoties() {
+      const avg = (honger + slaap + plezier) / 3;
+      const img = document.getElementById("tamagotchiImg");
+      if (avg > 75) {
+        img.src = "happy.png";
+        document.getElementById("text").textContent = "De pop is blij en gezond!";
+      } else if (avg > 50) {
+        img.src = "Tamagotchi .png";
+        document.getElementById("text").textContent = "De pop voelt zich redelijk.";
+      } else  {
+        img.src = "sad.png";
+        document.getElementById("text").textContent = "De pop is verdrietig en ongezond!";
+    
+      }
+
+       if  (honger === 0 || slaap === 0 || plezier === 0) {
+        img.src = "dead.png";
+        document.getElementById("text").textContent = "Je pop is overleden! Herlaad de pagina om opnieuw te beginnen.";
+      } 
   
-    // Functies om punten te verlagen
+    }
+
+  
+
+    
     function verlaagPunten() {
       if (honger > 0) honger -= 1;
       if (slaap > 0) slaap -= 1;
-      if (pleizer > 0) pleizer -= 1;
-  
-      // Update de statistieken in de UI
-      document.getElementById("honger").textContent = honger;
-      document.getElementById("slaap").textContent = slaap;
-      document.getElementById("pleizer").textContent = pleizer;
-  
-      // Controleer of de pop "dood" is
-      if (honger === 0 || slaap === 0 || pleizer === 0) {
-        document.getElementById("text").textContent = "Je pop is overleden! Herlaad de pagina om opnieuw te beginnen.";
-        clearInterval(interval);
-      }
+      if (plezier > 0) plezier -= 1;
 
-      
+      if (honger === 0 || slaap === 0 || plezier === 0) 
+       { 
+        document.getElementById("text").textContent = "Je pop is overleden! Herlaad de pagina om opnieuw te beginnen.";
+        clearInterval(interval);        
+        document.querySelectorAll('button').forEach(button => button.disabled = true);
+         
+       }
+
+
+      updateBars();
+      weergavevanemoties();
     }
-  
-    // Functie om de pop te voeden
+
+    
     function voedPop() {
       if (honger < 100) {
-        honger += 10;
-        pleizer += 5;
-        document.getElementById("honger").textContent = honger;
-        if (honger >= 100) {
-          document.getElementById("text").textContent = "De pop is vol!";
-        } else {
-          document.getElementById("text").textContent = "Je hebt de pop gevoed!";
-        }
+        honger = Math.min(honger + 10, 100);
+        plezier = Math.min(plezier + 5, 100);
+        document.getElementById("text").textContent = "Je hebt de pop gevoed!";
       } else {
         document.getElementById("text").textContent = "De pop is niet hongerig!";
       }
+      updateBars();
+       weergavevanemoties();
     }
-  
-    // Functie om de pop te laten slapen
+
+    
     function laatSlapen() {
       if (slaap < 100) {
-        slaap += 10;
-        document.getElementById("slaap").textContent = slaap;
+        slaap = Math.min(slaap + 10, 100);
         document.getElementById("text").textContent = "De pop slaapt nu.";
       } else {
         document.getElementById("text").textContent = "De pop is niet moe!";
       }
+      updateBars();
+      weergavevanemoties();
     }
-  
-    // Functie om te spelen
+
+    
     function spelen() {
-      if (pleizer < 100) {
-        pleizer += 10;
-        honger -= 5;
-        slaap -= 5;
-        document.getElementById("pleizer").textContent = pleizer;
+      if (plezier < 100) {
+        plezier = Math.min(plezier + 10, 100);
+        honger = Math.max(honger - 5, 0);
+        slaap = Math.max(slaap - 5, 0);
         document.getElementById("text").textContent = "De pop heeft plezier!";
       } else {
         document.getElementById("text").textContent = "De pop is al heel blij!";
       }
+      updateBars();
+      weergavevanemoties();
     }
-  
-    // Start een interval om elke 10 seconden punten te verlagen
-    const interval = setInterval(verlaagPunten, 1000);
+
     
-  </script>
+     weergavevanemoties();
+
   
+    const interval = setInterval(() => {
+    verlaagPunten();
+    }, 1000);
+  </script>
 </body>
 </html>
